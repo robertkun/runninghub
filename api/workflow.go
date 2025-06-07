@@ -94,5 +94,94 @@ var (
 		},
 	}
 
-	// 可以继续添加更多工作流配置...
+	// wan2.1_图生视频动作控制（跳舞工作流）
+	GirlWorkflow = &WorkflowConfig{
+		ID:          "1931185988360404994",
+		Name:        "wan2.1_图生视频动作控制（跳舞工作流）",
+		Description: "wan2.1_图生视频动作控制（跳舞工作流）",
+		NodeConfigs: map[string]string{
+			"18": "图片输入节点",
+			"40": "文本提示词节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "34",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// 泼水换装
+	PoShuiWorkflow = &WorkflowConfig{
+		ID:          "1931186232649252865",
+		Name:        "泼水变装+换装=通义万相=艾橘溪",
+		Description: "泼水变装+换装=通义万相=艾橘溪",
+		NodeConfigs: map[string]string{
+			"18": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "18",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// VACE 14B-图生视频(可自动提示词)
+	ZiZhuWorkflow = &WorkflowConfig{
+		ID:          "1931350292812771329",
+		Name:        "VACE 14B-图生视频(可自动提示词)",
+		Description: "VACE 14B-图生视频(可自动提示词)",
+		NodeConfigs: map[string]string{
+			"210": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "210",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+	
+	// ATI字节最新轨迹驱动wan视频生成版
+	ATiWorkflow = &WorkflowConfig{
+		ID:          "1931384612306792449",
+		Name:        "ATI字节最新轨迹驱动wan视频生成版)",
+		Description: "ATI字节最新轨迹驱动wan视频生成版",
+		NodeConfigs: map[string]string{
+			"58": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "58",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// FramePack-F1图生视频(帧率优化+时长优化+提示词优化)
+	FramePackWorkflow = &WorkflowConfig{
+		ID:          "1931386939079852033",
+		Name:        "FramePack-F1图生视频(帧率优化+时长优化+提示词优化)",
+		Description: "FramePack-F1图生视频(帧率优化+时长优化+提示词优化)",
+		NodeConfigs: map[string]string{
+			"2": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "2",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
 )

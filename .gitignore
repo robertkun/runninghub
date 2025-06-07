@@ -1,0 +1,27 @@
+# 忽略配置文件
+api/config.go
+
+# 忽略输出目录
+outputs/
+inputs/
+
+# 忽略临时文件
+tmp/
+
+# 忽略系统文件
+.DS_Store
+
+# 忽略 IDE 文件
+.idea/
+.vscode/
+
+# 忽略 Go 编译文件
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 忽略测试文件
+*.test
+*.out 

@@ -188,16 +188,23 @@ func main() {
 
 	// 创建工作流管理器
 	manager := api.NewWorkflowManager()
+
 	// 注册工作流
 	manager.RegisterWorkflow(api.CatWorkflow)
 	manager.RegisterWorkflow(api.DogWorkflow)
+	manager.RegisterWorkflow(api.GirlWorkflow)
+	manager.RegisterWorkflow(api.PoShuiWorkflow)
+	manager.RegisterWorkflow(api.ZiZhuWorkflow)
+	manager.RegisterWorkflow(api.ATiWorkflow)
+	manager.RegisterWorkflow(api.FramePackWorkflow)
+
 	// 在这里注册更多工作流...
 
 	// 创建工作流执行器
 	executor := api.NewWorkflowExecutor(manager)
 
 	switch {
-	case *batchImg:
+	case *batchImg: 
 		if *workflowID == "" {
 			log.Fatalf("批量处理时必须指定 -workflow <工作流ID>")
 		}
