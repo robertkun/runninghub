@@ -1,0 +1,148 @@
+package api
+
+import (
+	"fmt"
+	"log"
+	"time"
+)
+
+// WorkflowExecutor 工作流执行器
+type WorkflowExecutor struct {
+	manager *WorkflowManager
+}
+
+// NewWorkflowExecutor 创建工作流执行器
+func NewWorkflowExecutor(manager *WorkflowManager) *WorkflowExecutor {
+	return &WorkflowExecutor{
+		manager: manager,
+	}
+}
+
+// ExecuteWorkflow 执行工作流
+func (we *WorkflowExecutor) ExecuteWorkflow(workflowID string) (*TaskCreateResponse, error) {
+	// 获取工作流配置
+	config, exists := we.manager.GetWorkflow(workflowID)
+	if !exists {
+		return nil, fmt.Errorf("工作流不存在: %s", workflowID)
+	}
+
+	// 使用工作流配置中的固定参数
+	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
+	for _, param := range config.Params {
+		// 跳过图片输入节点
+		if param.IsImage {
+			continue
+		}
+		nodeInfoList = append(nodeInfoList, NodeInfo{
+			NodeId:     param.NodeId,
+			FieldName:  param.FieldName,
+			FieldValue: param.FieldValue,
+		})
+	}
+
+	// 创建任务
+	return CreateAdvancedTask(config.ID, nodeInfoList)
+}
+
+// ExecuteWorkflowWithImage 执行带图片的工作流
+func (we *WorkflowExecutor) ExecuteWorkflowWithImage(workflowID string, imagePath string) (*TaskCreateResponse, error) {
+	// 获取工作流配置
+	config, exists := we.manager.GetWorkflow(workflowID)
+	if !exists {
+		return nil, fmt.Errorf("工作流不存在: %s", workflowID)
+	}
+
+	// 上传图片
+	uploadResp, err := UploadImage(imagePath)
+	if err != nil {
+		return nil, fmt.Errorf("上传图片失败: %v", err)
+	}
+
+	// 使用工作流配置中的固定参数
+	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
+	for _, param := range config.Params {
+		if param.IsImage {
+			// 设置图片参数
+			nodeInfoList = append(nodeInfoList, NodeInfo{
+				NodeId:     param.NodeId,
+				FieldName:  param.FieldName,
+				FieldValue: uploadResp.Data.FileName,
+			})
+		} else {
+			// 设置其他参数
+			nodeInfoList = append(nodeInfoList, NodeInfo{
+				NodeId:     param.NodeId,
+				FieldName:  param.FieldName,
+				FieldValue: param.FieldValue,
+			})
+		}
+	}
+
+	// 创建任务
+	return CreateAdvancedTask(config.ID, nodeInfoList)
+}
+
+// ExecuteWorkflowWithText 执行带文本的工作流
+func (we *WorkflowExecutor) ExecuteWorkflowWithText(workflowID string, text string) (*TaskCreateResponse, error) {
+	// 获取工作流配置
+	config, exists := we.manager.GetWorkflow(workflowID)
+	if !exists {
+		return nil, fmt.Errorf("工作流不存在: %s", workflowID)
+	}
+
+	// 使用工作流配置中的固定参数，但替换文本参数
+	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
+	for _, param := range config.Params {
+		if param.IsImage {
+			// 跳过图片输入节点
+			continue
+		}
+		if param.FieldName == "text" {
+			// 设置文本参数
+			nodeInfoList = append(nodeInfoList, NodeInfo{
+				NodeId:     param.NodeId,
+				FieldName:  param.FieldName,
+				FieldValue: text,
+			})
+		} else {
+			// 设置其他参数
+			nodeInfoList = append(nodeInfoList, NodeInfo{
+				NodeId:     param.NodeId,
+				FieldName:  param.FieldName,
+				FieldValue: param.FieldValue,
+			})
+		}
+	}
+
+	// 创建任务
+	return CreateAdvancedTask(config.ID, nodeInfoList)
+}
+
+// MonitorTask 监控任务状态
+func (we *WorkflowExecutor) MonitorTask(taskID string, onSuccess func(*TaskOutputResponse)) error {
+	start := time.Now()
+	for {
+		statusResp, err := QueryTaskStatus(taskID)
+		if err != nil {
+			return fmt.Errorf("查询任务状态失败: %v", err)
+		}
+
+		elapsed := int(time.Since(start).Seconds())
+		log.Printf("任务状态: %s (已等待 %d 秒)\n", statusResp.Data, elapsed)
+		if statusResp.Data == "SUCCESS" || statusResp.Data == "FAILED" {
+			totalElapsed := int(time.Since(start).Seconds())
+			log.Printf("任务结束，最终状态: %s，总耗时: %d 秒\n", statusResp.Data, totalElapsed)
+			if statusResp.Data == "SUCCESS" && onSuccess != nil {
+				outputResp, err := QueryTaskOutputs(taskID)
+				if err != nil {
+					return fmt.Errorf("查询任务生成结果失败: %v", err)
+				}
+				onSuccess(outputResp)
+			}
+			break
+		}
+
+		time.Sleep(2 * time.Second)
+	}
+	return nil
+}
