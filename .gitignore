@@ -5,9 +5,6 @@ api/config.go
 outputs/
 inputs/
 
-# 忽略临时文件
-tmp/
-
 # 忽略系统文件
 .DS_Store
 
