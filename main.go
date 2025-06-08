@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"strconv"
 
 	"runninghub/api"
 )
@@ -174,6 +175,31 @@ func BatchProcessText(workflowID string, executor *api.WorkflowExecutor) error {
 }
 
 func main() {
+	// 启动时获取并打印账户信息
+	apiKey := api.GetApiKey()
+	if apiKey == "" {
+		fmt.Println("[警告] 未设置 API Key，无法获取账户信息。")
+	} else {
+		status, err := api.GetAccountStatus(apiKey)
+		if err != nil {
+			fmt.Printf("[账户信息] 获取失败: %v\n", err)
+		} else if status.Code != 0 {
+			fmt.Printf("[账户信息] 获取失败: %s\n", status.Msg)
+		} else {
+			remainCoins := status.Data.RemainCoins
+			currentTaskCounts := status.Data.CurrentTaskCounts
+			// 尝试转换为 int
+			if coins, err := strconv.Atoi(remainCoins); err == nil {
+				remainCoins = fmt.Sprintf("%d", coins)
+			}
+			if tasks, err := strconv.Atoi(currentTaskCounts); err == nil {
+				currentTaskCounts = fmt.Sprintf("%d", tasks)
+			}
+			fmt.Printf("[账户信息] 剩余金币: %s，当前任务数: %s\n", remainCoins, currentTaskCounts)
+		}
+	}
+	time.Sleep(3 * time.Second)
+
 	// 定义命令行参数
 	taskID := flag.String("task", "", "要查询的任务ID")
 	cancel := flag.Bool("cancel", false, "是否取消任务")
@@ -197,6 +223,9 @@ func main() {
 	manager.RegisterWorkflow(api.ZiZhuWorkflow)
 	manager.RegisterWorkflow(api.ATiWorkflow)
 	manager.RegisterWorkflow(api.FramePackWorkflow)
+	manager.RegisterWorkflow(api.FramePackF1Workflow)
+	manager.RegisterWorkflow(api.OrbitWorkflow)
+	manager.RegisterWorkflow(api.VACE14BWorkflow)
 
 	// 在这里注册更多工作流...
 

@@ -113,7 +113,7 @@ var (
 		},
 	}
 
-	// 泼水换装
+	// 泼水换装(图生视频)
 	PoShuiWorkflow = &WorkflowConfig{
 		ID:          "1931186232649252865",
 		Name:        "泼水变装+换装=通义万相=艾橘溪",
@@ -178,6 +178,60 @@ var (
 		Params: []NodeParam{
 			{
 				NodeId:     "2",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// 运镜女孩(图生视频)
+	OrbitWorkflow = &WorkflowConfig{
+		ID:          "1931384038911574017",
+		Name:        "FramePack-F1图生视频(帧率优化+时长优化+提示词优化)",
+		Description: "FramePack-F1图生视频(帧率优化+时长优化+提示词优化)",
+		NodeConfigs: map[string]string{
+			"191": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "191",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// FramePack-F1敏神最新算法图生视频
+	FramePackF1Workflow = &WorkflowConfig{
+		ID:          "1930526505527595010",
+		Name:        "FramePack-F1敏神最新算法图生视频",
+		Description: "FramePack-F1敏神最新算法图生视频",
+		NodeConfigs: map[string]string{
+			"2": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "2",
+				FieldName:  "image",
+				FieldValue: "", // 图片路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
+
+	// VACE 14B-图生视频(可自动提示词)
+	VACE14BWorkflow = &WorkflowConfig{
+		ID:          "1931521281978466306",
+		Name:        "VACE 14B-图生视频(可自动提示词)",
+		Description: "VACE 14B-图生视频(可自动提示词)",
+		NodeConfigs: map[string]string{
+			"210": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "210",
 				FieldName:  "image",
 				FieldValue: "", // 图片路径会在执行时设置
 				IsImage:    true,
