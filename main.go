@@ -299,7 +299,7 @@ func main() {
 
 				// 判断是否为视频类型，若是则用图片名命名
 				var fileName string
-				if strings.HasPrefix(output.FileType, "video") && imageBaseName != "" {
+				if imageBaseName != "" {
 					fileName = fmt.Sprintf("%s_%s_%d%s", imageBaseName, timestamp, i, filepath.Ext(output.FileUrl))
 				} else {
 					fileName = fmt.Sprintf("%s_%s_%d%s", resp.Data.TaskId, timestamp, i, filepath.Ext(output.FileUrl))

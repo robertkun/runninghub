@@ -75,7 +75,7 @@ func SaveTaskOutputs(outputDir, taskID string, outputs []TaskOutput, imageBaseNa
 		fmt.Printf("[批量]   任务耗时: %s\n", output.TaskCostTime)
 
 		var fileName string
-		if strings.HasPrefix(output.FileType, "video") && imageBaseName != "" {
+		if imageBaseName != "" {
 			fileName = fmt.Sprintf("%s_%s_%d%s", imageBaseName, time.Now().Format("20060102_150405"), i, filepath.Ext(output.FileUrl))
 		} else {
 			fileName = fmt.Sprintf("%s_%s_%d%s", taskID, time.Now().Format("20060102_150405"), i, filepath.Ext(output.FileUrl))
