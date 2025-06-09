@@ -20,9 +20,10 @@ type UploadResponse struct {
 	} `json:"data"`
 }
 
-// UploadImage 上传图片到 RunningHub 服务器
-// filePath: 本地图片文件路径
-func UploadImage(filePath string) (*UploadResponse, error) {
+// UploadImage 上传文件到 RunningHub 服务器
+// filePath: 本地文件路径
+// fileType: 文件类型，可以是 "image" 或 "video"
+func UploadImage(filePath string, fileType string) (*UploadResponse, error) {
 	// 创建multipart表单
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
@@ -33,7 +34,7 @@ func UploadImage(filePath string) (*UploadResponse, error) {
 	}
 
 	// 添加fileType字段
-	if err := writer.WriteField("fileType", "image"); err != nil {
+	if err := writer.WriteField("fileType", fileType); err != nil {
 		return nil, fmt.Errorf("写入fileType失败: %v", err)
 	}
 

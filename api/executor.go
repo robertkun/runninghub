@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -45,20 +46,26 @@ func (we *WorkflowExecutor) ExecuteWorkflow(workflowID string) (*TaskCreateRespo
 }
 
 // ExecuteWorkflowWithImage 执行带图片的工作流
-func (we *WorkflowExecutor) ExecuteWorkflowWithImage(workflowID string, imagePath string) (*TaskCreateResponse, error) {
+func (we *WorkflowExecutor) ExecuteWorkflowWithImage(workflowID string, filePath string) (*TaskCreateResponse, error) {
 	// 获取工作流配置
 	config, exists := we.manager.GetWorkflow(workflowID)
 	if !exists {
 		return nil, fmt.Errorf("工作流不存在: %s", workflowID)
 	}
 
-	// 上传图片
-	uploadResp, err := UploadImage(imagePath)
-	if err != nil {
-		return nil, fmt.Errorf("上传图片失败: %v", err)
+	// 获取文件类型
+	fileType := "image"
+	if strings.HasSuffix(strings.ToLower(filePath), ".mp4") {
+		fileType = "video"
 	}
 
-	// 使用工作流配置中的固定参数
+	// 上传文件
+	uploadResp, err := UploadImage(filePath, fileType)
+	if err != nil {
+		return nil, fmt.Errorf("上传文件失败: %v", err)
+	}
+
+	// 使用工作流配置中的固定参数，但替换图片参数
 	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
 	for _, param := range config.Params {
 		if param.IsImage {

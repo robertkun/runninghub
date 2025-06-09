@@ -226,6 +226,7 @@ func main() {
 	manager.RegisterWorkflow(api.FramePackF1Workflow)
 	manager.RegisterWorkflow(api.OrbitWorkflow)
 	manager.RegisterWorkflow(api.VACE14BWorkflow)
+	manager.RegisterWorkflow(api.ShuZiRenWorkflow)
 
 	// 在这里注册更多工作流...
 

@@ -238,4 +238,22 @@ var (
 			},
 		},
 	}
+
+	// 数字人+口播
+	ShuZiRenWorkflow = &WorkflowConfig{
+		ID:          "1927694627866820610",
+		Name:        "数字人+口播",
+		Description: "数字人+口播",
+		NodeConfigs: map[string]string{
+			"1": "视频输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "1",
+				FieldName:  "video",
+				FieldValue: "", // 视频路径会在执行时设置
+				IsImage:    true,
+			},
+		},
+	}
 )

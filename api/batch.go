@@ -104,37 +104,37 @@ func BatchProcessInputs(workflowID string, concurrency int, executor *WorkflowEx
 		return fmt.Errorf("创建 tmp 目录失败: %v", err)
 	}
 
-	// 获取所有图片文件
+	// 获取所有文件
 	files, err := ioutil.ReadDir(inputDir)
 	if err != nil {
 		return fmt.Errorf("读取 inputs 目录失败: %v", err)
 	}
 
-	// 过滤图片文件
-	var imageFiles []string
+	// 过滤文件
+	var inputFiles []string
 	for _, file := range files {
 		if !file.IsDir() {
-			ext := filepath.Ext(file.Name())
-			if ext == ".png" || ext == ".jpg" || ext == ".jpeg" {
-				imageFiles = append(imageFiles, filepath.Join(inputDir, file.Name()))
+			ext := strings.ToLower(filepath.Ext(file.Name()))
+			if ext == ".png" || ext == ".jpg" || ext == ".mp4" {
+				inputFiles = append(inputFiles, filepath.Join(inputDir, file.Name()))
 			}
 		}
 	}
 
-	fmt.Printf("共获取到 %d 个图片文件：\n", len(imageFiles))
-	for _, img := range imageFiles {
-		fmt.Println("  -", img)
+	fmt.Printf("共获取到 %d 个文件：\n", len(inputFiles))
+	for _, file := range inputFiles {
+		fmt.Println("  -", file)
 	}
 
-	if len(imageFiles) == 0 {
-		fmt.Println("inputs 目录下没有图片文件。")
+	if len(inputFiles) == 0 {
+		fmt.Println("inputs 目录下没有支持的文件（支持 .png、.jpg、.mp4）。")
 		return nil
 	}
 
 	sem := make(chan struct{}, concurrency)
 	var wg sync.WaitGroup
 
-	for _, imgPath := range imageFiles {
+	for _, imgPath := range inputFiles {
 		sem <- struct{}{}
 		wg.Add(1)
 		go func(img string) {
@@ -160,7 +160,7 @@ func BatchProcessInputs(workflowID string, concurrency int, executor *WorkflowEx
 				if err != nil {
 					fmt.Printf("[批量] 任务监控失败: %s, 错误: %v\n", img, err)
 				}
-				// 任务完成后立即移动图片
+				// 任务完成后立即移动文件
 				dst := filepath.Join(tmpDir, filepath.Base(img))
 				if err := os.Rename(img, dst); err != nil {
 					fmt.Printf("[批量] 移动文件失败: %s -> %s, 错误: %v\n", img, dst, err)
