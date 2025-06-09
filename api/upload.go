@@ -91,5 +91,12 @@ func UploadImage(filePath string, fileType string) (*UploadResponse, error) {
 		return nil, fmt.Errorf("解析响应失败: %v", err)
 	}
 
+	// 添加成功日志
+	if uploadResp.Code == 0 {
+		fmt.Printf("[上传成功] 文件: %s\n", filepath.Base(filePath))
+		fmt.Printf("[上传成功] 类型: %s\n", fileType)
+		fmt.Printf("[上传成功] 服务器文件名: %s\n", uploadResp.Data.FileName)
+	}
+
 	return &uploadResp, nil
 }

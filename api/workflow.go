@@ -241,18 +241,18 @@ var (
 
 	// 数字人+口播
 	ShuZiRenWorkflow = &WorkflowConfig{
-		ID:          "1927694627866820610",
+		ID:          "1932095333768359938",
 		Name:        "数字人+口播",
 		Description: "数字人+口播",
 		NodeConfigs: map[string]string{
-			"1": "视频输入节点",
+			"1": "LoadVideo",
 		},
 		Params: []NodeParam{
 			{
 				NodeId:     "1",
-				FieldName:  "video",
-				FieldValue: "", // 视频路径会在执行时设置
-				IsImage:    true,  // 改回 true，因为我们需要使用图片上传接口
+				FieldName:  "file",
+				FieldValue: "",
+				IsImage:    true,
 			},
 		},
 	}
