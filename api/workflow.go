@@ -256,4 +256,22 @@ var (
 			},
 		},
 	}
+
+	// VACE 14B-图生视频(可自动提示词)
+	VACE14BWorkflow2 = &WorkflowConfig{
+		ID:          "1932205246158991361",
+		Name:        "VACE 14B-图生视频(可自动提示词)",
+		Description: "VACE 14B-图生视频(可自动提示词)",
+		NodeConfigs: map[string]string{
+			"210": "图片输入节点",
+		},
+		Params: []NodeParam{
+			{
+				NodeId:     "210",
+				FieldName:  "image",
+				FieldValue: "",
+				IsImage:    true,
+			},
+		},
+	}
 )
