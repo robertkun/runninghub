@@ -68,8 +68,8 @@ func (we *WorkflowExecutor) ExecuteWorkflowWithImage(workflowID string, filePath
 	// 使用工作流配置中的固定参数，但替换图片参数
 	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
 	for _, param := range config.Params {
-		if param.IsImage {
-			// 设置图片参数
+		if param.IsImage || param.FieldName == "video" {
+			// 设置图片/视频参数
 			nodeInfoList = append(nodeInfoList, NodeInfo{
 				NodeId:     param.NodeId,
 				FieldName:  param.FieldName,

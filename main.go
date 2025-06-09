@@ -198,7 +198,7 @@ func main() {
 			fmt.Printf("[账户信息] 剩余金币: %s，当前任务数: %s\n", remainCoins, currentTaskCounts)
 		}
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	// 定义命令行参数
 	taskID := flag.String("task", "", "要查询的任务ID")

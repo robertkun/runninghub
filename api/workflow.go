@@ -252,7 +252,7 @@ var (
 				NodeId:     "1",
 				FieldName:  "video",
 				FieldValue: "", // 视频路径会在执行时设置
-				IsImage:    true,
+				IsImage:    true,  // 改回 true，因为我们需要使用图片上传接口
 			},
 		},
 	}
