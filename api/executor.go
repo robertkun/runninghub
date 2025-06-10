@@ -152,7 +152,7 @@ func (we *WorkflowExecutor) ExecuteWorkflowWithVideoAndAudio(workflowID string, 
 	for _, param := range config.Params {
 		if param.IsImage {
 			// 根据节点ID设置不同的文件
-			if param.NodeId == "1" {
+			if param.NodeId == "2" {
 				// 设置视频参数
 				nodeInfoList = append(nodeInfoList, NodeInfo{
 					NodeId:     param.NodeId,
@@ -160,7 +160,7 @@ func (we *WorkflowExecutor) ExecuteWorkflowWithVideoAndAudio(workflowID string, 
 					FieldValue: videoResp.Data.FileName,
 				})
 				fmt.Printf("[视频] 设置到节点 %s: %s\n", param.NodeId, videoResp.Data.FileName)
-			} else if param.NodeId == "4" {
+			} else if param.NodeId == "1" {
 				// 设置音频参数
 				nodeInfoList = append(nodeInfoList, NodeInfo{
 					NodeId:     param.NodeId,
