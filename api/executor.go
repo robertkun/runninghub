@@ -134,14 +134,14 @@ func (we *WorkflowExecutor) ExecuteWorkflowWithVideoAndAudio(workflowID string, 
 	}
 
 	// 上传视频文件
-	videoResp, err := UploadImage(videoPath, "video")
+	videoResp, err := UploadImage(videoPath, "image")
 	if err != nil {
 		return nil, fmt.Errorf("上传视频文件失败: %v", err)
 	}
 	fmt.Printf("[视频] 上传成功: %s\n", videoResp.Data.FileName)
 
 	// 上传音频文件
-	audioResp, err := UploadImage(audioPath, "audio")
+	audioResp, err := UploadImage(audioPath, "image")
 	if err != nil {
 		return nil, fmt.Errorf("上传音频文件失败: %v", err)
 	}
