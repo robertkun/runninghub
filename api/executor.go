@@ -125,6 +125,64 @@ func (we *WorkflowExecutor) ExecuteWorkflowWithText(workflowID string, text stri
 	return CreateAdvancedTask(config.ID, nodeInfoList)
 }
 
+// ExecuteWorkflowWithVideoAndAudio 执行带视频和音频的工作流
+func (we *WorkflowExecutor) ExecuteWorkflowWithVideoAndAudio(workflowID string, videoPath string, audioPath string) (*TaskCreateResponse, error) {
+	// 获取工作流配置
+	config, exists := we.manager.GetWorkflow(workflowID)
+	if !exists {
+		return nil, fmt.Errorf("工作流不存在: %s", workflowID)
+	}
+
+	// 上传视频文件
+	videoResp, err := UploadImage(videoPath, "video")
+	if err != nil {
+		return nil, fmt.Errorf("上传视频文件失败: %v", err)
+	}
+	fmt.Printf("[视频] 上传成功: %s\n", videoResp.Data.FileName)
+
+	// 上传音频文件
+	audioResp, err := UploadImage(audioPath, "audio")
+	if err != nil {
+		return nil, fmt.Errorf("上传音频文件失败: %v", err)
+	}
+	fmt.Printf("[音频] 上传成功: %s\n", audioResp.Data.FileName)
+
+	// 使用工作流配置中的固定参数，但替换视频和音频参数
+	nodeInfoList := make([]NodeInfo, 0, len(config.Params))
+	for _, param := range config.Params {
+		if param.IsImage {
+			// 根据节点ID设置不同的文件
+			if param.NodeId == "1" {
+				// 设置视频参数
+				nodeInfoList = append(nodeInfoList, NodeInfo{
+					NodeId:     param.NodeId,
+					FieldName:  param.FieldName,
+					FieldValue: videoResp.Data.FileName,
+				})
+				fmt.Printf("[视频] 设置到节点 %s: %s\n", param.NodeId, videoResp.Data.FileName)
+			} else if param.NodeId == "4" {
+				// 设置音频参数
+				nodeInfoList = append(nodeInfoList, NodeInfo{
+					NodeId:     param.NodeId,
+					FieldName:  param.FieldName,
+					FieldValue: audioResp.Data.FileName,
+				})
+				fmt.Printf("[音频] 设置到节点 %s: %s\n", param.NodeId, audioResp.Data.FileName)
+			}
+		} else {
+			// 设置其他参数
+			nodeInfoList = append(nodeInfoList, NodeInfo{
+				NodeId:     param.NodeId,
+				FieldName:  param.FieldName,
+				FieldValue: param.FieldValue,
+			})
+		}
+	}
+
+	// 创建任务
+	return CreateAdvancedTask(config.ID, nodeInfoList)
+}
+
 // MonitorTask 监控任务状态
 func (we *WorkflowExecutor) MonitorTask(taskID string, onSuccess func(*TaskOutputResponse)) error {
 	start := time.Now()

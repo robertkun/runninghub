@@ -246,12 +246,19 @@ var (
 		Description: "数字人+口播",
 		NodeConfigs: map[string]string{
 			"1": "LoadVideo",
+			"4": "LoadAudio",
 		},
 		Params: []NodeParam{
 			{
 				NodeId:     "1",
 				FieldName:  "file",
-				FieldValue: "",
+				FieldValue: "", // 视频路径会在执行时设置
+				IsImage:    true,
+			},
+			{
+				NodeId:     "4",
+				FieldName:  "file",
+				FieldValue: "", // 音频路径会在执行时设置
 				IsImage:    true,
 			},
 		},

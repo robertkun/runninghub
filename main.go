@@ -205,6 +205,8 @@ func main() {
 	cancel := flag.Bool("cancel", false, "是否取消任务")
 	workflowID := flag.String("workflow", "", "要执行的工作流ID")
 	imagePath := flag.String("image", "", "要上传的图片路径")
+	videoPath := flag.String("video", "", "要上传的视频路径")
+	audioPath := flag.String("audio", "", "要上传的音频路径")
 	list := flag.Bool("list", false, "列出所有可用的工作流")
 	batchImg := flag.Bool("batchImg", false, "批量处理 inputs 目录下的图片")
 	batchText := flag.Bool("batchText", false, "批量处理 inputs 目录下的图片")
@@ -262,7 +264,13 @@ func main() {
 		var err error
 
 		var imageBaseName string
-		if *imagePath != "" {
+		if *videoPath != "" && *audioPath != "" {
+			// 执行带视频和音频的工作流
+			resp, err = executor.ExecuteWorkflowWithVideoAndAudio(*workflowID, *videoPath, *audioPath)
+			// 使用视频文件名作为基础名
+			base := filepath.Base(*videoPath)
+			imageBaseName = strings.TrimSuffix(base, filepath.Ext(base))
+		} else if *imagePath != "" {
 			// 获取图片基础名（不含扩展名）
 			base := filepath.Base(*imagePath)
 			imageBaseName = strings.TrimSuffix(base, filepath.Ext(base))
@@ -377,11 +385,13 @@ func main() {
 		fmt.Println("   go run main.go -workflow <工作流ID>")
 		fmt.Println("\n3. 执行带图片的工作流:")
 		fmt.Println("   go run main.go -workflow <工作流ID> -image <图片路径>")
-		fmt.Println("\n4. 查询任务状态:")
+		fmt.Println("\n4. 执行对口型工作流:")
+		fmt.Println("   go run main.go -workflow <工作流ID> -video <视频路径> -audio <音频路径>")
+		fmt.Println("\n5. 查询任务状态:")
 		fmt.Println("   go run main.go -task <任务ID>")
-		fmt.Println("\n5. 取消任务:")
+		fmt.Println("\n6. 取消任务:")
 		fmt.Println("   go run main.go -task <任务ID> -cancel")
-		fmt.Println("\n6. 批量处理:")
+		fmt.Println("\n7. 批量处理:")
 		fmt.Println("   go run main.go -batch -workflow <工作流ID> [-concurrency N]")
 	}
 }
